@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "start": "webpack-dev-server --mode development --open"
+    "start": "webpack-dev-server --mode development --open",
+    "deploy": "gh-pages -d dist"
   },
   "author": "Joshua Robertson",
   "license": "ISC",
+  "homepage": "https://joshuarobertson.github.io/recipes-app",
   "devDependencies": {
     "@babel/core": "^7.11.1",
     "@babel/preset-env": "^7.11.0",
