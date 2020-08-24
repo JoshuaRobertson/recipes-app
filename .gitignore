@@ -1,0 +1,13 @@
+# Generated files #
+######################
+.DS_Store
+.npm
+
+# Dependency directories #
+######################
+node_modules/
+
+# Webpack generated directories #
+######################
+dist/js
+dist/index.html
