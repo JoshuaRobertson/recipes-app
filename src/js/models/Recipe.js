@@ -34,7 +34,7 @@ export default class Recipe {
   parseIngredients() {
     const unitsLong = ['tablespoons', 'tablespoon', 'ounces', 'ounce', 'teaspoons', 'teaspoon', 'cups', 'pounds'];
     const unitsShort = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound'];
-    const units =[...unitsShort, 'kg', 'g'];
+    const units = [...unitsShort, 'kg', 'g'];
 
     const newIngredients = this.ingredients.map(el => {
       // 1. Set consistent units (uniform)
@@ -51,38 +51,46 @@ export default class Recipe {
       const unitIndex = arrIng.findIndex(el2 => units.includes(el2));
 
       let objIng;
-      if (unitIndex > -1) {
-        // There is a unit
-        const arrCount = arrIng.slice(0, unitIndex);
-
-        let count;
-        if (arrCount.length === 1) {
-          count = eval(arrIng[0].replace('-', '+'));
-        } else {
-          count = eval(arrIng.slice(0, unitIndex).join('+'));
-        }
-
+      if (arrIng[0] === '') {
+        // If there is no unit or number but blank space at the start of the ingredient.
         objIng = {
-          count,
-          unit: arrIng[unitIndex],
-          ingredient: arrIng.slice(unitIndex + 1).join(' ')
-        }
+          count : -1,
+          unit : '',
+          ingredient : arrIng.slice(1).join(' '),
+        };
 
-      } else if (parseInt(arrIng[0], 10)) {
-        // There is no unit but first element is a number
-        objIng = {
-          count: parseInt(arrIng[0], 10),
-          unit: '',
-          ingredient: arrIng.slice(1).join(' ')
+        } else if (unitIndex > -1) {
+          // There is a unit
+          const arrCount = arrIng.slice(0, unitIndex);
+
+          let count;
+          if (arrCount.length === 1) {
+            count = eval(arrIng[0].replace('-', '+'));
+          } else {
+            count = eval(arrIng.slice(0, unitIndex).join('+'));
+          }
+
+          objIng = {
+            count,
+            unit : arrIng[unitIndex],
+            ingredient : arrIng.slice(unitIndex + 1).join(' ')
+          };
+
+        } else if (parseInt(arrIng[0], 10)) {
+          // There is no unit but first element is a number
+          objIng = {
+            count : parseInt(arrIng[0], 10),
+            unit : '',
+            ingredient : arrIng.slice(1).join(' '),
+          }
+        } else if (unitIndex === -1) {
+          // There is no unit or number
+          objIng = {
+            count : 1,
+            unit : '',
+            ingredient,
+          }
         }
-      } else if (unitIndex === -1) {
-        // There is no unit or number
-        objIng = {
-          count: 1,
-          unit: '',
-          ingredient
-        }
-      }
 
       return objIng;
 

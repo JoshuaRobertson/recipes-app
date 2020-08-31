@@ -1,11 +1,47 @@
 import { elements } from './base';
+import { Fraction } from 'fractional';
+
+const formatCount = count => {
+  if (count !== -1) {
+    const [int, dec] = count.toFixed(2).toString().split('.').map(el => parseInt(el, 10));
+
+    if (!dec) return count;
+
+    if (dec === 33 || dec === 67) {
+
+      if (int === 0) {
+        const fr = new Fraction(count);
+        return `${eval(fr.numerator/fr.numerator)}/${parseInt(eval((fr.denominator * fr.numerator)/(fr.denominator * fr.denominator/10)))}`;
+      } else {
+        const fr = new Fraction(count - int);
+        return `${int} ${eval(fr.numerator/fr.numerator)}/${parseInt(eval((fr.denominator * fr.numerator)/(fr.denominator * fr.denominator/10)))}`;
+      }
+
+    } else {
+
+      if (int === 0) {
+        const fr = new Fraction(count);
+        return `${fr.numerator}/${fr.denominator}`;
+      } else {
+        const fr = new Fraction(count - int);
+        return `${int} ${fr.numerator}/${fr.denominator}`;
+      }
+
+    }
+
+  } else if (count === -1) {
+    return '';
+  }
+
+  return '?';
+};
 
 const createIngredient = ingredient => `
   <li class="recipe__item">
     <svg class="recipe__icon">
       <use href="img/icons.svg#icon-check"></use>
     </svg>
-    <div class="recipe__count">${ingredient.count}</div>
+    <div class="recipe__count">${formatCount(ingredient.count)}</div>
     <div class="recipe__ingredient">
       <span class="recipe__unit">${ingredient.unit}</span>
       ${ingredient.ingredient}
