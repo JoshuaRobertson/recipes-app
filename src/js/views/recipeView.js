@@ -3,27 +3,28 @@ import { Fraction } from 'fractional';
 
 const formatCount = count => {
   if (count !== -1) {
-    const [int, dec] = count.toFixed(2).toString().split('.').map(el => parseInt(el, 10));
+    const newCount = Math.round(count * 1000) / 1000;
+    const [int, dec] = newCount.toFixed(2).toString().split('.').map(el => parseInt(el, 10));
 
-    if (!dec) return count;
+    if (!dec) return newCount;
 
     if (dec === 33 || dec === 67) {
 
       if (int === 0) {
-        const fr = new Fraction(count);
+        const fr = new Fraction(newCount);
         return `${eval(fr.numerator/fr.numerator)}/${parseInt(eval((fr.denominator * fr.numerator)/(fr.denominator * fr.denominator/10)))}`;
       } else {
-        const fr = new Fraction(count - int);
+        const fr = new Fraction(newCount - int);
         return `${int} ${eval(fr.numerator/fr.numerator)}/${parseInt(eval((fr.denominator * fr.numerator)/(fr.denominator * fr.denominator/10)))}`;
       }
 
     } else {
 
       if (int === 0) {
-        const fr = new Fraction(count);
+        const fr = new Fraction(newCount);
         return `${fr.numerator}/${fr.denominator}`;
       } else {
-        const fr = new Fraction(count - int);
+        const fr = new Fraction(newCount - int);
         return `${int} ${fr.numerator}/${fr.denominator}`;
       }
 
