@@ -1,9 +1,11 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import List from './models/List';
+import Likes from './models/Likes';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
+import * as likesView from './views/likesView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 /** Global state of app
@@ -93,7 +95,10 @@ const controlRecipe = async () => {
 
       // 5. Render recipe
       clearLoader();
-      recipeView.renderRecipe(state.recipe);
+      recipeView.renderRecipe(
+        state.recipe,
+        state.likes.isLiked(id)
+      );
 
     } catch (error) {
       alert('Error processing recipe.');
@@ -136,6 +141,48 @@ elements.shopping.addEventListener('click', e => {
   }
 });
 
+/**
+* Like Controller
+**/
+
+// Temporary fix
+state.likes = new Likes();
+likesView.toggleLikesMenu(state.likes.getLikesTotal());
+
+const controlLike = () => {
+  const currentID = state.recipe.id;
+  if (!state.likes) state.likes = new Likes();
+
+  if (!state.likes.isLiked(currentID)) {
+    // User has not yet liked current recipe
+    // 1. Add like to the state
+    const newLike = state.likes.addLike(
+      currentID,
+      state.recipe.title,
+      state.recipe.author,
+      state.recipe.img
+    );
+
+    // 2. Toggle the like button
+    likesView.toggleLikeBtn(true);
+
+    // 3. Add like to the UI list
+    likesView.renderLike(newLike);
+
+  } else {
+    // User has liked current recipe
+    // 1. Remove like from the state
+    state.likes.deleteLike(currentID);
+
+    // 2. Toggle the like button
+    likesView.toggleLikeBtn(false);
+
+    // 3. Remove like from the UI list
+    likesView.deleteLike(currentID);
+  }
+  likesView.toggleLikesMenu(state.likes.getLikesTotal());
+};
+
 // Handling recipe button clicks
 elements.recipe.addEventListener('click', e => {
   if (e.target.matches('.btn-decrease, .btn-decrease *')) {
@@ -149,8 +196,10 @@ elements.recipe.addEventListener('click', e => {
     state.recipe.updateServings('inc');
     recipeView.updateServingsIngredients(state.recipe);
   } else if (e.target.matches('.recipe__btn-add, .recipe__btn-add *')) {
+    // Add ingredients to shopping list
     controlList();
+  } else if (e.target.matches('.recipe__love, .recipe__love *')) {
+    // Call Like controller
+    controlLike();
   }
 });
-
-window.l = new List();
