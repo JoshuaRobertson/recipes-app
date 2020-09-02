@@ -8,6 +8,10 @@ Search a wide range of cooking recipes, save them to your favourites and add the
 
 Developed as an example of modern JavaScript using ES6, NPM, Babel & Webpack.
 
+## :point_right: Demo
+
+[Try it out](https://joshuarobertson.github.io/recipes-app/)
+
 ### License
 
 Developed by: [Josh Robertson](https://github.com/JoshuaRobertson/)
